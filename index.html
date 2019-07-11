@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Image Segmentation</title>
+</head>
+
+<body>
+  <!--Main DIV-->
+  <div id="main">
+    <!--Alg Controls Div-->
+    <div id="alg-controls">
+
+      <!--BASIC OPERATIONS-->
+      <button class="accordion">Operații de bază</button>
+      <div class="panel">
+        <div class="controls">
+          <h3>Inversare culori</h3>
+          <button id="apply-invert">Aplică</button>
+          <h3>Solarizare</h3>
+          <form action="" class="form">
+            <input type="number" title="Valoare prag" placeholder="0 - 255" id="t-solarisation-value" maxlength="3" min="0" max="255">
+            <button id="apply-solarisation">Aplică</button>
+            <button class="reset">Reset</button>
+            <button id="apply-adaptive-t-solarisation">Solarizare adaptivă</button>
+
+          </form>
+          <input type="checkbox" id="greater-than-t" class="check" title="Bifează pentru a schimba calculul pentru pixeli (standard: p_value < t">
+
+          <h3>Contrast</h3>
+          <div id="contrast">
+            <input type="text" class="labels" id="contrast-label" style="padding: 5px" value="0">
+            <input type="range" name="contrast-value" min="-255" max="255" step="1" id="contrast-value">
+          </div>
+          <h3>Blurare</h3>
+          <button id="aplly-blur-once">Blur x1</button>
+          <button id="aplly-blur-ten-times">Blur x10</button>
+          <h3>Luminozitate</h3>
+          <div id="luminozitate">
+            <input type="text" class="labels" id="luminozitate-label" style="padding: 5px" value="0">
+            <input type="range" name="luminozitate-value" min="-255" max="255" step="1" id="luminozitate-value">
+          </div>
+          <h3>Grayscale</h3>
+          <button id="aplly-grayscale">Aplică</button>
+        </div>
+
+      </div>
+
+      <!--THRESHOLD-->
+      <button class="accordion" id="threshold-title">Threshold</button>
+      <div class="panel">
+        <div class="controls">
+          <form action="" class="form">
+            <input type="number" placeholder="0 - 255" id="threshold-value" maxlength="3" min="0" max="255">
+            <button id="apply-threshold">Aplică</button>
+            <button id="apply-adaptive-threshold">Threshold automat </button>
+            <button class="reset">Reset</button>
+            <br>
+            <select name="" id="c-color">
+              <option value="red">Red</option>
+              <option value="green">Green</option>
+              <option value="blue">Blue</option>
+            </select>
+            <input type="number" title="Valoare constantă C pentru calcul T local" placeholder="0 - 255" id="color-t-value" maxlength="3" min="0" max="255">
+            <button id="color-threshold">Threshold pe culoare</button>
+            <br>
+
+
+            <input type="number" title="Valoare constantă C pentru calcul T local" placeholder="C >= 0" id="c-value" maxlength="3" min="0" max="255">
+            <input type="number" title="Dimensiune regiune ( R x R )" placeholder="7 - 32" id="R-size-value" maxlength="3" min="0" max="255">
+
+            <button id="local-threshold">Threshold local</button>
+          </form>
+          <div id="color-picker">
+            <h3>Culoare Fundal</h3>
+            <input type="color" value="#ffffff" id="higher-color">
+            <h3>Culoare Prim-Plan</h3>
+            <input type="color" value="#000000" id="lower-color">
+          </div>
+        </div>
+
+      </div>
+      <!--KMEANS-->
+      <button class="accordion" id="kmeans-title">KMeans</button>
+      <div class="panel">
+        <div class="controls">
+          <select name="" id="k-value" title="Număr centroizi">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          <button id="apply-kmeans">Aplică</button>
+          <button class="reset">Reset</button>
+          <button id="kmeans-manual">Alege manual</button>
+        </div>
+      </div>
+      <!--EDGE DETECTION-->
+      <button class="accordion" id="edge-detection-title">Edge Detection</button>
+      <div class="panel">
+        <div class="controls">
+          <select name="" id="filters">
+                <option value="sobel">Sobel</option>
+                <option value="laplacian">Laplacian</option>
+                <option value="prewitt">Prewitt</option>
+                <option value="sobelfeldman">Sobel-Feldman</option>
+                <option value="scharr">Scharr</option>
+              </select>
+          <button id="apply-edge-detection">Aplică</button>
+          <button class="reset">Reset</button>
+        </div>
+        <h3>Colorează marginile mai importante</h3>
+        <div id="color-edges">
+          <input type="color" id="edge-color" value="#fffFFF">
+          <button id="apply-edge-color">Colorează margini</button>
+        </div>
+
+
+
+      </div>
+
+    </div>
+    <!--Canvas Div-->
+    <div id="display">
+      <canvas id="canvas" width="400px" height="200px"></canvas>
+      <!--Display Controls-->
+      <div id="display-controls">
+        <select name="" id="img-select">
+            <option value="./img/bird.jpg">Pasăre</option>
+            <option value="./img/rasberry.jpg">Zmeură</option>
+            <option value="./img/bulldog.jpg">Bulldog</option>
+            <option value="./img/pink-lotus.jpg">Lotus</option>
+            <option value="./img/creioane.jpg">Culori</option>
+          </select>
+
+        <button id="add-image">Adaugă imagine</button>
+        <button id="save-image">Salvează</button>
+        <button class="reset">RESET</button>
+        <input type="file" style="display: none" id="upload-file">
+        <button class="gallery-control" id="add-to-gallery">Adaugă în galerie</button>
+        <button class="gallery-control" id="goto-gallery">Galerie</button>
+        <button class="gallery-control" id="clear-gallery">Șterge galerie</button>
+        <button id="show-histograms">Histograme</button>
+      </div>
+    </div>
+  </div>
+
+  <!--GALLERY-->
+
+  <div id="gallery">
+    <button id="goto-main"> < </button>
+    <div id="image-gallery">
+
+    </div>
+  </div>
+
+  <!--HISTOGRAMS-->
+  <div id="histograms">
+    <button id="h-goto-main"> < </button>
+    <div id="histograms-div">
+      <div>
+        <h3>Gray Scale</h4>
+          <canvas id="gray-scale" width="900" height="400">
+          
+              </canvas>
+      </div>
+
+      <div>
+        <h3>Red Scale</h3>
+        <canvas id="red-scale" width="900" height="400">
+        
+            </canvas>
+      </div>
+
+      <div>
+        <h3>Green Scale</h3>
+        <canvas id="green-scale" width="900" height="400">
+      
+                </canvas>
+      </div>
+
+      <div>
+        <h3>Blue Scale</h3>
+        <canvas id="blue-scale" width="900" height="400">
+            
+                </canvas>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- KMeNAS MANUAL-->
+  <div id="manual-kmeans">
+    <button id="return-to-main"> < </button>
+    <canvas id="manual-canvas">
+
+    </canvas>
+    <div id="manual-controls">
+      <div id="centroids">
+
+      </div>
+
+      <button id="choose-again">Alege din nou</button>
+      <button id="aplly-manual">Aplică</button>
+      <button id="save">Salvează</button>
+    </div>
+
+  </div>
+
+
+
+  <button id="force-reset"></button>
+  <script src="./scripts/main.js"></script>
+  <script src="./scripts/threshold.js"></script>
+  <script src="./scripts/test.js"></script>
+  <script src="./scripts/gallery.js"></script>
+  <script src="./scripts/histogram.js"></script>
+  <script src="./scripts/kmeans.js"></script>
+  <script src="./scripts/edge-detection.js"></script>
+  <script src="./scripts/basic-operations.js"></script>
+</body>
+
+</html>
